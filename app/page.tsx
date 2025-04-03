@@ -5,6 +5,7 @@ import { ChangeEvent, useState } from "react";
 export default function Home() {
   const [stringValues, setStringValues] = useState<string>("");
   const [sumValue, setSumValue] = useState<number | string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleOnChange = ({
     target: { value },
@@ -27,8 +28,18 @@ export default function Home() {
       .map(Number)
       .filter((num) => !isNaN(num));
 
-    const numberSum = valueArray.reduce((total, value) => total + value, 0);
-    setSumValue(numberSum);
+    const negNums = valueArray.filter((num) => num < 0);
+
+    if (!!negNums && negNums.length > 0) {
+      setSumValue(0);
+      setErrorMessage(`Negative numbers not allowed ${negNums.join(", ")}`);
+    } else {
+      const numberSum = valueArray.reduce((total, value) => {
+        return value > 1000 ? total : total + value;
+      }, 0);
+      setSumValue(numberSum);
+      setErrorMessage("");
+    }
   };
 
   return (
@@ -46,7 +57,9 @@ export default function Home() {
             className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
             onChange={handleOnChange}
           />
-
+          {errorMessage && (
+            <label className="text-red-600 font-medium">{errorMessage}</label>
+          )}
           <button
             type="submit"
             className="mt-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 transition-all duration-200 cursor-pointer"
