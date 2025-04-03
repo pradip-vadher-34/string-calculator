@@ -13,12 +13,20 @@ export default function Home() {
   };
 
   const handleCalculate = () => {
-    const valueArray = stringValues
+    let customDelimeter = "";
+    let value = stringValues;
+    if (stringValues.startsWith("//")) {
+      customDelimeter = stringValues[2];
+      value = value.replaceAll(`${customDelimeter}`, ",");
+    }
+
+    const valueArray = value
       .replaceAll("\\n", ",")
       .split(",")
       .map((str) => str.trim())
       .map(Number)
       .filter((num) => !isNaN(num));
+
     const numberSum = valueArray.reduce((total, value) => total + value, 0);
     setSumValue(numberSum);
   };
