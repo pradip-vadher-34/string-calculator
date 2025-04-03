@@ -18,7 +18,17 @@ export default function Home() {
     let value = stringValues;
     if (stringValues.startsWith("//")) {
       customDelimeter = stringValues[2];
-      value = value.replaceAll(`${customDelimeter}`, ",");
+      if (customDelimeter === "[") {
+        const startingIndex = stringValues.indexOf("[");
+        const endingIndex = stringValues.indexOf("]");
+        const delimeter = stringValues.substring(
+          startingIndex + 1,
+          endingIndex,
+        );
+        value = value.replaceAll(`${delimeter}`, ",");
+      } else {
+        value = value.replaceAll(`${customDelimeter}`, ",");
+      }
     }
 
     const valueArray = value
